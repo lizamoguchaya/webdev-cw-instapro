@@ -1,8 +1,9 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage, getToken, page, renderApp,setPosts } from "../index.js";
-import { addLikePost, delPost, dislikePost, getPosts } from '../api.js'
-
+import { addLikePost, deletePost, removeLikePost, getPosts } from '../api.js'
+import { formatDistanceToNow } from 'date-fns'
+import { ru } from 'date-fns/locale'
 
 
 export function renderPostsPageComponent() {
@@ -13,9 +14,9 @@ export function renderPostsPageComponent() {
       return {
           postId: post.id,
           imageUrl: post.imageUrl,
-          // createdAt: formatDistanceToNow(new Date(post.createdAt), {
-          //     locale: ru,
-          // }),
+          createdAt: formatDistanceToNow(new Date(post.createdAt), {
+              locale: ru,
+          }),
           description: post.description,
           userId: post.user.id,
           userName: post.user.name,
@@ -123,7 +124,7 @@ export function likeEventListener() {
           const userId = postHeader.dataset.userId
 
           if (posts[index].isLiked) {
-              dislikePost({ token: getToken(), postId })
+             removeLikePost({ token: getToken(), postId })
                   .then(() => {
                       posts[index].isLiked = false
                   })
@@ -179,7 +180,7 @@ export function likeEventListenerOnIMG() {
           const userId = postHeader.dataset.userId
 
           if (posts[index].isLiked) {
-              dislikePost({ token: getToken(), postId })
+              removeLikePost({ token: getToken(), postId })
                   .then(() => {
                       posts[index].isLiked = false
                   })
@@ -236,7 +237,7 @@ export function deletePostEventListener() {
               const userId =
                   postElement.querySelector('.post-header').dataset.userId
 
-              delPost({ token: getToken(), postId }).then(() => {
+              deletePost({ token: getToken(), postId }).then(() => {
                   getPosts({ token: getToken(), userId }).then((response) => {
                       if (page === USER_POSTS_PAGE) {
                           setPosts(response)

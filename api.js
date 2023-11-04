@@ -106,7 +106,7 @@ export function addPost({ token, imageUrl }) {
   })
 }
 
-export function delPost({ token, postId }) {
+export function deletePost({ token, postId }) {
   return fetch(`${postsHost}/${postId}`, {
       method: 'DELETE',
       headers: {
@@ -122,7 +122,7 @@ export function delPost({ token, postId }) {
   })
 }
 
-export function getPostsOneUser({ token, userId }) {
+export function getPostsOfUser({ token, userId }) {
   return fetch(`${postsHost}/user-posts/${userId}`, {
       method: 'GET',
       headers: {
@@ -159,7 +159,7 @@ export function addLikePost({ token, postId }) {
       return response.json()
   })
 }
-export function dislikePost({ token, postId }) {
+export function removeLikePost({ token, postId }) {
   return fetch(`${postsHost}/${postId}/dislike`, {
       method: 'POST',
       headers: {
@@ -167,7 +167,7 @@ export function dislikePost({ token, postId }) {
       },
   }).then((response) => {
       if (response.status === 401) {
-          alert('Лайкать посты могут только авторизованные пользователи')
+          alert('Войдите, чтобы убрать лайк')
           throw new Error('Нет авторизации')
       }
 
